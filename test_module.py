@@ -1,3 +1,9 @@
+# pylint: disable=invalid-name
+# pylint: disable=missing-docstring
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-locals
+
 import json
 import os
 import re
@@ -10,14 +16,15 @@ TESTCASES = list()
 INVENTORY = 'test/fixtures/hosts'
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-ROLE = re.match(r'^.*\/ansible-eos-([^/\s]+)\/test/arista-ansible-role-test$', HERE).group(1)
+ROLE = re.match(
+    r'^.*\/ansible-eos-([^/\s]+)\/test/arista-ansible-role-test$', HERE).group(1)
 CONFIG_BACKUP = '_eos_role_test_{}'.format(ROLE)
 
-EOS_ROLE_PLAYBK = 'test/arista-ansible-role-test/eos_role.yaml'
-EOS_MODULE_PLAYBK = 'test/arista-ansible-role-test/eos_module.yaml'
+EOS_ROLE_PLAYBOOK = 'test/arista-ansible-role-test/eos_role.yaml'
+EOS_MODULE_PLAYBOOK = 'test/arista-ansible-role-test/eos_module.yaml'
+
 
 class TestCase(object):
-
     def __init__(self, **kwargs):
         self.name = kwargs['name']
         self.module = kwargs['module']
@@ -41,8 +48,8 @@ class TestCase(object):
     def __str__(self):
         return self.name
 
-class TestModule(object):
 
+class TestModule(object):
     def __init__(self, testcase):
         self.testcase = testcase
         self.description = 'Test [%s]: %s' % (testcase.module, testcase.name)
@@ -55,7 +62,7 @@ class TestModule(object):
             reported = int(device[hostname]['changed'])
             expected = int(self.testcase.changed)
             msg = ("First pass role execution reported {} task change(s), "
-                   "expected {}". format(reported, expected))
+                   "expected {}".format(reported, expected))
             assert reported == expected, msg
 
         if self.testcase.idempotent:
@@ -64,8 +71,9 @@ class TestModule(object):
             for device in response:
                 hostname = device.keys()[0]
                 reported = int(device[hostname]['changed'])
-                msg = ("Second pass role execution reported {} task change(s), "
-                       "expected 0".format(reported))
+                msg = (
+                    "Second pass role execution reported {} task change(s), "
+                    "expected 0".format(reported))
                 assert not reported, msg
 
         if self.testcase.present:
@@ -78,14 +86,13 @@ class TestModule(object):
                 separator = " ---\n"
                 updates = device[hostname]['updates']
                 msg = ("{} - Expected configuration\n{}{}\n{}not found "
-                       "on device '{}'".
-                       format(desc, separator, '\n'.join(updates),
-                              separator, hostname))
+                       "on device '{}'".format(desc, separator,
+                                               '\n'.join(updates), separator,
+                                               hostname))
                 assert device[hostname]['updates'] == [], msg
                 # Result should show no changes
                 msg = ("{} - Device '{}' reported no updates, but "
-                       "returned 'changed'".
-                       format(desc, hostname))
+                       "returned 'changed'".format(desc, hostname))
                 assert device[hostname]['changed'] == False, msg
 
         if self.testcase.absent:
@@ -95,8 +102,10 @@ class TestModule(object):
             for device in response:
                 hostname = device.keys()[0]
                 # Result should show change has taken place
-                msg = ("{} - Entire absent configuration found on device '{}'".
-                       format(desc, hostname))
+                msg = (
+                    "{} - Entire absent configuration found on device '{}'".
+                    format(desc, hostname)
+                )
                 assert device[hostname]['changed'] == True, msg
                 # Compare changes with expected values, sorted at global level
                 updates = '\n'.join(device[hostname]['updates'])
@@ -105,7 +114,7 @@ class TestModule(object):
                 absent = re.split(r'\n(?=\S)', self.testcase.absent.rstrip())
                 absent = '\n'.join(sorted(absent))
                 msg = ("{} - Some part of absent configuration found "
-                       "on device '{}'". format(desc, hostname))
+                       "on device '{}'".format(desc, hostname))
                 assert updates == absent, msg
 
     def setUp(self):
@@ -124,7 +133,8 @@ class TestModule(object):
 
             arguments = [json.dumps(args)]
 
-            ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments)
+            ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                                  arguments=arguments)
 
             if ret_code != 0:
                 self.output("Playbook stdout:\n\n{}".format(out))
@@ -147,12 +157,14 @@ class TestModule(object):
 
             arguments = [json.dumps(args)]
 
-            ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments)
+            ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                                  arguments=arguments)
 
             if ret_code != 0:
                 self.output("Playbook stdout:\n\n{}".format(out))
                 self.output("Playbook stderr:\n\n{}".format(err))
-                warnings.warn("\nError in test case teardown\n\n{}".format(out))
+                warnings.warn("\nError in test case teardown\n\n{}".format(
+                    out))
 
     @classmethod
     def output(cls, text):
@@ -165,8 +177,9 @@ class TestModule(object):
 
     def execute_module(self):
         arguments = [json.dumps(self.testcase.arguments)]
-        arguments.append(json.dumps({'rolename': "ansible-eos-{}".format(ROLE)}))
-        return ansible_playbook(EOS_ROLE_PLAYBK, arguments=arguments)
+        arguments.append(json.dumps(
+            {'rolename': "ansible-eos-{}".format(ROLE)}))
+        return ansible_playbook(EOS_ROLE_PLAYBOOK, arguments=arguments)
 
     def parse_response(self, output, validate=False):
         # Get all the lines after the 'PLAY RECAP ****...' header
@@ -186,8 +199,10 @@ class TestModule(object):
                 raise ValueError("Unable to parse Ansible output for "
                                  "recap information")
             (name, okcount, changed, unreach, failed) = match.groups()
-            recap.append({name: {'ok': okcount, 'changed': changed,
-                                 'unreachable': unreach, 'failed': failed}})
+            recap.append({name: {'ok': okcount,
+                                 'changed': changed,
+                                 'unreachable': unreach,
+                                 'failed': failed}})
 
         if not validate:
             return recap
@@ -195,7 +210,8 @@ class TestModule(object):
         updates = []
         for device in recap:
             hostname = device.keys()[0]
-            match = re.search(r'(?<!skipping: )\[%s\] => (\{.*\})' % hostname, output, re.M)
+            match = re.search(r'(?<!skipping: )\[%s\] => (\{.*\})' % hostname,
+                              output, re.M)
             if not match:
                 self.output("Playbook stdout:\n\n{}".format(output))
                 raise ValueError("Unable to parse Ansible output for "
@@ -206,21 +222,21 @@ class TestModule(object):
         return updates
 
     def run_validation(self, src, desc='Validate configuration'):
-        args = {
-            'module': 'eos_template',
-            'description': desc,
-            'src': src,
-        }
+        args = {'module': 'eos_template', 'description': desc, 'src': src, }
         arguments = [json.dumps(args)]
-        (ret_code, out, _) = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments, options=['--check'])
+        (ret_code, out, _) = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                              arguments=arguments,
+                                              options=['--check'])
         assert ret_code == 0, "Validation playbook failed execution"
         return self.parse_response(out, validate=True)
+
 
 def filter_modules(modules, filenames):
     if modules:
         modules = ['{0}.yaml'.format(s) for s in modules.split(',')]
         return list(set(modules).intersection(filenames))
     return filenames
+
 
 def setup():
     print >> sys.stderr, "Test Suite Setup:"
@@ -236,11 +252,12 @@ def setup():
     }
     arguments = [json.dumps(args)]
 
-    ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments)
+    ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                          arguments=arguments)
 
     if ret_code != 0:
-        print ">> ansible-playbook {} stdout:\n".format(EOS_MODULE_PLAYBK), out
-        print ">> ansible-playbook {} stddrr:\n".format(EOS_MODULE_PLAYBK), err
+        print ">> ansible-playbook {} stdout:\n".format(EOS_MODULE_PLAYBOOK), out
+        print ">> ansible-playbook {} stddrr:\n".format(EOS_MODULE_PLAYBOOK), err
         teardown()
         raise RuntimeError("Error in Test Suite Setup")
 
@@ -262,6 +279,7 @@ def setup():
             TESTCASES.append(TestCase(**kwargs))
 
     print >> sys.stderr, "  Setup complete\n"
+
 
 def teardown():
     print >> sys.stderr, "\nTest Suite Teardown:"
@@ -293,13 +311,14 @@ def teardown():
         arguments = [json.dumps(args)]
 
         # ret_code, out, err = ansible_playbook(CMD_PLAY, arguments=arguments)
-        ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments)
+        ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                              arguments=arguments)
 
         if ret_code != 0:
             msg = "Error replacing running-config on nodes\n" \
                   "Running ansible-playbook {} -e {}\n" \
                   ">> stdout: {}\n" \
-                  ">> stderr: {}\n".format(EOS_MODULE_PLAYBK, arguments, out, err)
+                  ">> stderr: {}\n".format(EOS_MODULE_PLAYBOOK, arguments, out, err)
             warnings.warn(msg)
 
         print >> sys.stderr, "  Deleting backup config from nodes ..."
@@ -307,26 +326,28 @@ def teardown():
             'module': 'eos_command',
             'description': 'Delete backup config file from node',
             'cmds': [
-                'configure terminal',
-                'delete {}'.format(CONFIG_BACKUP)
+                'configure terminal', 'delete {}'.format(CONFIG_BACKUP)
             ],
         }
         arguments = [json.dumps(args)]
 
-        ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBK, arguments=arguments)
+        ret_code, out, err = ansible_playbook(EOS_MODULE_PLAYBOOK,
+                                              arguments=arguments)
 
         if ret_code != 0:
             msg = "Error deleting backup config on nodes\n" \
                   "Running ansible-playbook {} -e {}\n" \
                   ">> stdout: {}\n" \
-                  ">> stderr: {}\n".format(EOS_MODULE_PLAYBK, arguments, out, err)
+                  ">> stderr: {}\n".format(EOS_MODULE_PLAYBOOK, arguments, out, err)
             warnings.warn(msg)
 
     print >> sys.stderr, "  Teardown complete"
 
+
 def test_module():
     for testcase in TESTCASES:
         yield TestModule(testcase)
+
 
 def ansible_playbook(playbook, arguments=None, options=None):
     if arguments is None:
