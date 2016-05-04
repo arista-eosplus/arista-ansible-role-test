@@ -10,11 +10,11 @@ TESTCASES = list()
 INVENTORY = 'test/fixtures/hosts'
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-ROLE = re.match(r'^.*\/ansible-eos-([^/\s]+)\/test/arista_role_test_framework$', HERE).group(1)
+ROLE = re.match(r'^.*\/ansible-eos-([^/\s]+)\/test/arista-ansible-role-test$', HERE).group(1)
 CONFIG_BACKUP = '_eos_role_test_{}'.format(ROLE)
 
-EOS_ROLE_PLAYBK = 'test/arista_role_test_framework/eos_role.yaml'
-EOS_MODULE_PLAYBK = 'test/arista_role_test_framework/eos_module.yaml'
+EOS_ROLE_PLAYBK = 'test/arista-ansible-role-test/eos_role.yaml'
+EOS_MODULE_PLAYBK = 'test/arista-ansible-role-test/eos_module.yaml'
 
 class TestCase(object):
 
