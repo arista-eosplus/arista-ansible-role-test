@@ -20,8 +20,8 @@ ROLE = re.match(
     r'^.*\/ansible-eos-([^/\s]+)\/test/arista-ansible-role-test$', HERE).group(1)
 CONFIG_BACKUP = '_eos_role_test_{}'.format(ROLE)
 
-EOS_ROLE_PLAYBOOK = 'test/arista-ansible-role-test/eos_role.yaml'
-EOS_MODULE_PLAYBOOK = 'test/arista-ansible-role-test/eos_module.yaml'
+EOS_ROLE_PLAYBOOK = 'test/arista-ansible-role-test/eos_role.yml'
+EOS_MODULE_PLAYBOOK = 'test/arista-ansible-role-test/eos_module.yml'
 
 
 class TestCase(object):
@@ -172,6 +172,10 @@ class TestModule(object):
 
     def run_module(self):
         (retcode, out, _) = self.execute_module()
+        out_stripped = re.sub(r'\"config\": \"! Command:.*\\nend\"',
+                              '\"config\": \"--- stripped for space ---\"',
+                              out)
+        self.output("PLaybook stdout:\n\n{}".format(out_stripped))
         assert retcode == self.testcase.exitcode
         return self.parse_response(out)
 
@@ -233,7 +237,7 @@ class TestModule(object):
 
 def filter_modules(modules, filenames):
     if modules:
-        modules = ['{0}.yaml'.format(s) for s in modules.split(',')]
+        modules = ['{0}.yml'.format(s) for s in modules.split(',')]
         return list(set(modules).intersection(filenames))
     return filenames
 
@@ -266,6 +270,11 @@ def setup():
     modules = os.environ.get('ANSIBLE_ROLE_TEST_CASES')
 
     testcases_home = os.path.join(HERE, 'testcases')
+    if not os.path.exists(testcases_home):
+        print >> sys.stderr, "\n  ***** Testcase directory not found!! *****"
+        teardown()
+        raise RuntimeError("Testcase path '{}' does not exist".format(testcases_home))
+
     filenames = os.listdir(testcases_home)
 
     for module in filter_modules(modules, filenames):
@@ -273,10 +282,15 @@ def setup():
         definition = yaml.load(open(path))
 
         defaults = definition.get('defaults', {})
-        for testcase in definition['testcases']:
-            kwargs = defaults.copy()
-            kwargs.update(testcase)
-            TESTCASES.append(TestCase(**kwargs))
+        testcases = definition.get('testcases', [])
+        if not testcases:
+            print >> sys.stderr, ("\n  ***** No testcases defined in "
+                                  "module {} *****\n".format(module))
+        else:
+            for testcase in definition.get('testcases', []):
+                kwargs = defaults.copy()
+                kwargs.update(testcase)
+                TESTCASES.append(TestCase(**kwargs))
 
     print >> sys.stderr, "  Setup complete\n"
 
