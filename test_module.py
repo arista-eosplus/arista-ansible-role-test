@@ -176,6 +176,7 @@ class TestModule(object):
                               '\"config\": \"--- stripped for space ---\"',
                               out)
         self.output("PLaybook stdout:\n\n{}".format(out_stripped))
+        self.output("Return code: {}, Expected code: {}".format(retcode, self.testcase.exitcode))
         assert retcode == self.testcase.exitcode
         return self.parse_response(out)
 
@@ -378,6 +379,8 @@ def ansible_playbook(playbook, arguments=None, options=None):
     for opt in options:
         command.append(opt)
     command.append('-vvv')
+
+    print >> sys.stdout, "\nAnsible playbook command:\n{}\n".format(command)
 
     stdout = subprocess.PIPE
     stderr = subprocess.PIPE
