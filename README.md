@@ -146,8 +146,8 @@ Developing Arista roles for Ansible
       +++ b/.gitmodules  
       @@ -0,0 +1,3 @@  
       +[submodule "test/arista-ansible-role-test"]  
-      \+ path = test/arista-ansible-role-test  
-      \+ url = https://github.com/arista-eosplus/arista-ansible-role-test.git  
+      + path = test/arista-ansible-role-test  
+      + url = https://github.com/arista-eosplus/arista-ansible-role-test.git  
       Submodule test/arista-ansible-role-test 0000000...f13f684 (new submodule)  
 
       --roletest-- >> git commit -am "Add arista-ansible-role-test submodule"  
