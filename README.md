@@ -129,31 +129,33 @@ Developing Arista roles for Ansible
   * git diff --cached --submodule
   * git commit -am "Add arista-ansible-role-test submodule"
 
-        --roletest-- >> git submodule add https://github.com/arista-eosplus/arista-ansible-role-test.git test/arista-ansible-role-test  
-        Cloning into 'test/arista-ansible-role-test'...  
-        remote: Counting objects: 29, done.  
-        remote: Compressing objects: 100% (21/21), done.  
-        remote: Total 29 (delta 10), reused 23 (delta 4), pack-reused 0  
-        Unpacking objects: 100% (29/29), done.  
-        Checking connectivity... done.  
+      ```
+      --roletest-- >> git submodule add https://github.com/arista-eosplus/arista-ansible-role-test.git test/arista-ansible-role-test  
+      Cloning into 'test/arista-ansible-role-test'...  
+      remote: Counting objects: 29, done.  
+      remote: Compressing objects: 100% (21/21), done.  
+      remote: Total 29 (delta 10), reused 23 (delta 4), pack-reused 0  
+      Unpacking objects: 100% (29/29), done.  
+      Checking connectivity... done.  
 
-        --roletest-- >> git diff --cached --submodule  
-        diff --git a/.gitmodules b/.gitmodules  
-        new file mode 100644  
-        index 0000000..15da1b3  
-        --- /dev/null  
-        +++ b/.gitmodules  
-        @@ -0,0 +1,3 @@  
-        +[submodule "test/arista-ansible-role-test"]  
-        \+ path = test/arista-ansible-role-test  
-        \+ url = https://github.com/arista-eosplus/arista-ansible-role-test.git  
-        Submodule test/arista-ansible-role-test 0000000...f13f684 (new submodule)  
+      --roletest-- >> git diff --cached --submodule  
+      diff --git a/.gitmodules b/.gitmodules  
+      new file mode 100644  
+      index 0000000..15da1b3  
+      --- /dev/null  
+      +++ b/.gitmodules  
+      @@ -0,0 +1,3 @@  
+      +[submodule "test/arista-ansible-role-test"]  
+      \+ path = test/arista-ansible-role-test  
+      \+ url = https://github.com/arista-eosplus/arista-ansible-role-test.git  
+      Submodule test/arista-ansible-role-test 0000000...f13f684 (new submodule)  
 
-        --roletest-- >> git commit -am "Add arista-ansible-role-test submodule"  
-        [roletest 8305130] Add arista-ansible-role-test submodule  
-         2 files changed, 4 insertions(+)  
-         create mode 100644 .gitmodules  
-         create mode 160000 test/arista-ansible-role-test  
+      --roletest-- >> git commit -am "Add arista-ansible-role-test submodule"  
+      [roletest 8305130] Add arista-ansible-role-test submodule  
+       2 files changed, 4 insertions(+)  
+       create mode 100644 .gitmodules  
+       create mode 160000 test/arista-ansible-role-test  
+       ```
 
 * Add test cases for the role:
 
