@@ -127,7 +127,7 @@ Developing Arista roles for Ansible
 
   * git submodule add https://github.com/arista-eosplus/arista-ansible-role-test.git test/arista-ansible-role-test
   * git diff --cached --submodule
-  * git commit -am "Add arista-ansible-role-test submodule"
+  * git commit -am 'Add arista-ansible-role-test submodule'
 
       ```
       --roletest-- >> git submodule add https://github.com/arista-eosplus/arista-ansible-role-test.git test/arista-ansible-role-test  
