@@ -155,7 +155,7 @@ Developing Arista roles for Ansible
      2 files changed, 4 insertions(+)  
      create mode 100644 .gitmodules  
      create mode 160000 test/arista-ansible-role-test  
-     ```
+    ```
 
 * Add test cases for the role:
 
