@@ -1,10 +1,21 @@
 
-Arista Roles for Ansible Development Guidelines
-===============================================
+Arista Roles for Ansible - Development Guidelines
+=================================================
+
+#### Table of Contents
+
+1. [Executing Test Cases for an Arista Ansible Role] (#executing-test-cases-for-an-arista-ansible-role)
+   * [Overview] (#overview)
+   * [Details] (#details)
+2. [Developing Arista Roles For Ansible] (#developing-arista-roles-for-ansible)
+    * [Role Development Guidelines] (#role-development-guidelines)
+    * [Role Test Development] (#role-test-development)
+    * [Development for arista-ansible-role-test] (#development-for-arista-ansible-role-test)
+
 
 
 Executing Test Cases for an Arista Ansible Role
-------------------
+-----------------------------------------------
 
 #### Overview
 
@@ -74,11 +85,123 @@ Developing Arista roles for Ansible
 
 #### Role development guidelines
 
+* Copy the following files from an existing Ansible EOS role into the
+  current role:
+
+  * .gitignore
+  * Makefile*
+  * defaults/main.yml*
+  * files/README.md
+  * filter_plugins/config_block.py
+  * handlers/main.yml*
+  * meta/main.yml*
+  * tasks/main.yml*
+  * templates/README.md
+  * vars/main.yml*
+  * test/fixtures/hosts
+
+  ```
+  Note: Asterisk (*) indicates file should be reviewed for changes specific
+  to the new role, such as updating the role name.
+  ```
+
+
 *XXX File structure, formatting guidelines, and other info goes here*
+
+
 
 #### Role test development
 
+* Make sure the role's README.md file includes the **Developer Information**
+  section, which points to this document under the
+  <ansible-eos-role>/test/arista-ansible-role-test directory. This information
+  can be copied from an existing role's README file.
+
+* Create a testcases directory for the role:
+
+    ```
+    --roletest-- >> mkdir -p test/testcases/
+    ```
+    
+* Import the arista-ansible-role-test repository into the role as a subtree.
+  From the root of the role directory, issue the following commands:
+
+  * git remote add role-test https[]()://github.com/arista-eosplus/arista-ansible-role-test.git  
+  * git subtree add --prefix=test/arista-ansible-role-test --squash role-test master  
+
+    ```
+    NOTE: These commands must be issued from a clean repo branch without any
+    pending changes or commits. The `git subtree add` command will generate
+    a commit to add the external repo to the working repository.
+    
+    --roletest-- >> git remote add role-test https://github.com/arista-eosplus/arista-ansible-role-test.git  
+    --roletest-- >> git subtree add --prefix=test/arista-ansible-role-test --squash role-test master  
+    git fetch role-test master  
+    warning: no common commits  
+    remote: Counting objects: 59, done.  
+    remote: Compressing objects: 100% (24/24), done.  
+    remote: Total 59 (delta 14), reused 0 (delta 0), pack-reused 35  
+    Unpacking objects: 100% (59/59), done.  
+    From https://github.com/arista-eosplus/arista-ansible-role-test  
+      * branch            master     -> FETCH_HEAD
+      * [new branch]      master     -> role-test/master
+    Added dir 'test/arista-ansible-role-test'  
+    ```
+
+* Add test cases for the role:
+
+  Create a yml file for each group of test cases.
+  Each group test file name should reflect the type of tests being run in
+  that group. When a role contains several template modules, it is a good
+  idea to have at least one test group for each template. Templates that
+  perform multiple configuration changes may also be separated into several
+  test group files.
+
+  Each test group file should contain a defaults section and a testcases
+  section. The defaults defines the module name reported by the test
+  framework, and this should be the same as the filename without an extension.
+
+
 *XXX Information specific to writing test cases and ensuring the test framework has been included as a submodule goes here*
+
+#### Development for arista-ansible-role-test
+
+Because the arista-ansible-role-test framework repository has been included
+as a subtree, direct modification of the test framework files is possible.
+If you need to make changes to the framework itself, please follow the steps
+outlined below, to make the propagation of the changes to the main 
+framework repo as smooth as possible.
+
+For the purposes of the instructions below, `role repo` refers to the base 
+repository of the role being worked on (e.g. ansible-eos-vxlan), and
+`framework repo` refers to the arista-ansible-role-test repository that was
+imported as a subtree, i.e. everything under the /test/arista-ansible-role-test
+directory in the role repo.
+
+* Always make sure you have the latest changes for the framework repo
+  in your local repository by issuing the command at the root of your role repo.
+
+      git subtree pull --prefix=test/arista-ansible-role-test --squash role-test master
+
+* Please keep commits to files in the framework directory 
+  (test/arista-ansible-role-test) separate from commits to the rest
+  of the role repo. This helps keep commit messages specific
+  to the framework repo itself.
+* Changes to the framework files must be committed to the role repo
+  before being pushed to the framework repo. (git commit the framework 
+  changes as part of the role repo before pushing the changes to the
+  framework repo) 
+* To push the changes to the framework repo, enter the following command
+  at the root of the role repo, where `<branch>` is the name of a branch on
+  the framework repo where the changes will be pushed. This branch will be
+  created if it does not exist.
+
+      git subtree push --prefix=test/arista-ansible-role-test --squash role-test <branch>
+
+* Make a pull request for the changes by visiting the [framework repo website]
+  (https://github.com/arista-eosplus/arista-ansible-role-test.git). There
+  you may create a new pull request for the branch you pushed the changes to.
+
 
 
 License
