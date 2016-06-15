@@ -85,23 +85,59 @@ Developing Arista roles for Ansible
 
 #### Role development guidelines
 
-* Copy the following files from an existing Ansible EOS role into the
-  current role:
+##### Existing role development
 
-  * .gitignore
-  * Makefile*
-  * defaults/main.yml*
-  * files/README.md
-  * filter_plugins/config_block.py
-  * handlers/main.yml*
-  * meta/main.yml*
-  * tasks/main.yml*
-  * templates/README.md
-  * vars/main.yml*
-  * test/fixtures/hosts
+To begin development on an existing Arista Ansible role, clone/fork
+the role repository to your working environment, create a working 
+branch, and proceed with development.
+
+##### New Arista Ansible role development
+
+To begin development on a new Arista role for Ansible, initialize a 
+role directory using the `ansible-galaxy init` command.
+  ```
+  ansible-galaxy init ansible-eos-newrole
+  ```
+
+This will create a directory named ansible-eos-newrole with the following
+directory structure:
+  ```
+    README.md
+    .travis.yml
+    defaults/
+      main.yml
+    files/
+    handlers/
+      main.yml
+    meta/
+      main.yml
+    templates/
+    tests/
+      inventory
+      test.yml
+    vars/
+      main.yml
+  ```
+
+Remove the .travis.yml file and the tests/ directory.
+
+Create a filter_plugins/ directory in the root of your new role's path
+and copy the filter_plugins/config_block.py source file from an existing
+Arista role into your directory structure.
+
+From an existing Arista role, copy the following files into the new
+role's path, creating any missing directories as needed:
+
+  - .gitignore
+  - Makefile*
+  - files/README.md
+  - filter_plugins/config_block.py
+  - handlers/main.yml
+  - meta/main.yml*
+  - test/fixtures/hosts
 
   ```
-  Note: Asterisk (*) indicates file should be reviewed for changes specific
+  Note: An asterisk (*) indicates file should be reviewed for changes specific
   to the new role, such as updating the role name.
   ```
 
