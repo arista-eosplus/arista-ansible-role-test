@@ -136,10 +136,11 @@ role's path, creating any missing directories as needed:
   - meta/main.yml*
   - test/fixtures/hosts
 
-  ```
-  Note: An asterisk (*) indicates file should be reviewed for changes specific
-  to the new role, such as updating the role name.
-  ```
+
+```
+Note: An asterisk (*) indicates file should be reviewed for changes specific
+to the new role, such as updating the role name.
+```
 
 
 *XXX File structure, formatting guidelines, and other info goes here*
