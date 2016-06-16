@@ -480,6 +480,7 @@ directory in the role repo.
   created if it does not exist.
 
     ```
+    git remote add role-test https://github.com/arista-eosplus/arista-ansible-role-test.git
     git subtree push --prefix=test/arista-ansible-role-test --squash role-test <branch>
     ```
     
