@@ -4,19 +4,19 @@ Arista Roles for Ansible - Development Guidelines
 
 #### Table of Contents
 
-1.                                           [Executing Test Cases for an Arista Ansible Role] (#executing-test-cases-for-an-arista-ansible-role)
-                                                                     * [Overview] (#overview)
-                     * [Details] (#details)
-1.                                           [Developing Arista Roles For Ansible] (#developing-arista-roles-for-ansible)
-                                                                     * [Preparing the Role Development Workspace] (#preparing-the-role-development-workspace)
-                     * [Existing Role Development] (#existing-role-development)
-                     * [New Arista Ansible role development] (#new-arista-ansible-role-development)
-*                            [Role Development Guidelines] (#role-development-guidelines)
-                                      * [Define the role's task list] (#define-the-roles-task-list)
-                             * [Implement jinja2 templates for the role's tasks] (#implement-jinja2-templates-for-the-roles-tasks)
-                             * [Include supporting files and documentation] (#include-supporting-files-and-documentation)
-*                            [Role Test Development] (#role-test-development)  
-                                      * [Development for arista-ansible-role-test] (#development-for-arista-ansible-role-test)
+* [Executing Test Cases for an Arista Ansible Role] (#executing-test-cases-for-an-arista-ansible-role)
+  * [Overview] (#overview)
+  * [Details] (#details)
+* [Developing Arista Roles For Ansible] (#developing-arista-roles-for-ansible)
+  * [Preparing the Role Development Workspace] (#preparing-the-role-development-workspace)
+    * [Existing Role Development] (#existing-role-development)
+    * [New Arista Ansible role development] (#new-arista-ansible-role-development)
+  * [Role Development Guidelines] (#role-development-guidelines)
+    * [Define the role's task list] (#define-the-roles-task-list)
+    * [Implement jinja2 templates for the role's tasks] (#implement-jinja2-templates-for-the-roles-tasks)
+    * [Include supporting files and documentation] (#include-supporting-files-and-documentation)
+  * [Role Test Development] (#role-test-development)  
+  * [Development for arista-ansible-role-test] (#development-for-arista-ansible-role-test)
 
 
 
