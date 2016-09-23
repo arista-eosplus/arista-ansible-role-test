@@ -8,7 +8,7 @@
   tasks:
     # Call the eos_command module if module is set to eos_command
     - name: "{{ description | default('command playbook task') }}"
-      eos_command:
+      eos_config:
         commands: "{{ cmds | default(omit) }}"
         auth_pass: "{{ auth_pass | default(omit) }}"
         authorize: "{{ authorize | default(omit) }}"
